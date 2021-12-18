@@ -1,0 +1,79 @@
+clear
+
+#----------- Parameters --------------------------
+variable tstep     equal 0.0005
+variable tdamp     equal 0.05
+variable TEMP      equal 300.00
+
+variable PRERUN    equal 1e5
+variable PRETHER   equal ${PRERUN}/50
+variable PREDUMP   equal ${PRERUN}/5
+
+variable DUMPSTEP  equal 16
+variable NRUN      equal 520*${DUMPSTEP}
+#variable NRUN      equal 65540*${DUMPSTEP}
+variable THERSTEP  equal ${NRUN}/10
+
+variable kb        equal 1.3806488e-23
+variable ee        equal 1.60217657e-19
+
+# ---------- Initialize Simulation ---------------
+units         metal
+atom_style    atomic
+dimension     3
+boundary      p p p
+atom_modify   map array
+read_data     data.lammps
+timestep      ${tstep}
+
+# ---------- Define Interatomic Potential --------
+pair_style tersoff
+pair_coeff * * opt.tersoff C
+
+neighbor      0.3 bin
+neigh_modify  delay 0
+
+# ---------- compute ---------------------
+compute   displace all displace/atom
+compute   eng      all pe/atom
+compute   stress   all stress/atom NULL
+compute   eatoms   all reduce sum c_eng
+compute   stressz  all reduce sum c_stress[3]
+compute   1        all temp
+compute   ke       all ke/atom
+
+#--------- Pre-calculation -----------------------
+
+#--- 1. minimization
+reset_timestep 0
+fix       1 all box/relax z 10.0
+dump      1 all custom 100000 mini.dump id type x y z
+thermo    1000
+minimize  1e-20 0.00001 50000 50000
+unfix     1
+undump    1
+
+#--- 3. pre-MD
+reset_timestep 0
+
+velocity  all create ${TEMP} 4928459 rot yes dist gaussian
+fix       2 all nvt temp 300. 300. ${tdamp}
+
+thermo    ${PRETHER}
+#dump      2 all custom ${PREDUMP} pre.dump id type x y z vx vy vz
+run       ${PRERUN}
+unfix     2
+#undump    2
+
+#--- 3. normal MD
+reset_timestep 0
+
+fix         3 all nvt temp 300. 300. ${tdamp}
+thermo      ${THERSTEP}
+dump        3 all custom ${DUMPSTEP} md4band.dump id type x y z vx vy vz
+dump_modify 3 sort id
+run         ${NRUN}
+unfix       3
+undump      3
+
+print "All done!"
