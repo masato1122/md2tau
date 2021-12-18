@@ -1,4 +1,6 @@
-./mytest/
+./mytest/*
+./mytest
+mytest/
 ./examples/UTIL/new_mkpeapod/
 ./*/.txt
 *.txt
