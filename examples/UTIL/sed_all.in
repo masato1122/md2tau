@@ -1,0 +1,6 @@
+DIRECTION   -1
+DUMP_FILE   md4band.dump
+INIT_COORD  data.lammps
+NATOM_UNIT  40
+N_ROTATION  10
+TIMESTEP    0.0005    #-- [ps]
