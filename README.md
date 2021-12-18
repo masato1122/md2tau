@@ -1,6 +1,8 @@
 dump2sed and sed2tau
 =========================
 
+This code extracts linewidth of phonons from a specular energy density (SED) calculated with LAMMPS.
+
 dump2sed
 ------------
 
