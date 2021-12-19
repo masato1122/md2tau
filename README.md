@@ -13,6 +13,11 @@ sed2tau
 
 * To extract linewidth or lifetime of phonons from the SED
 
+Prerequisite
+-----------------
+
+* python>=3.0
+* lmfit
 
 References
 --------------
