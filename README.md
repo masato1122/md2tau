@@ -11,7 +11,7 @@ dump2sed
 sed2tau
 -------------
 
-* To extract linewidth or lifetime of phonons from the SED
+* To extract linewidth or lifetime of phonons from SEDs
 
 Prerequisite
 -----------------
