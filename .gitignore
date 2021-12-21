@@ -4,4 +4,5 @@ examples/UTIL/new_mkpeapod/
 *.txt
 do.sh
 box
+*.pyc
 
