@@ -12,7 +12,7 @@ fi
 if [ $# -ge 1 ]; then
     FILE=$1
 else
-    echo -n "Input file name: "
+    echo -n "Input file name (ex. SED_Z.txt): "
     read FILE
 fi
 

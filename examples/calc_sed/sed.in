@@ -5,3 +5,6 @@ N_ROTATION  10
 
 TIMESTEP    0.0005     #[ps]
 
+## 0.X, 1.Y, 2.Z, 3.R -1.all
+DIRECTION   2
+

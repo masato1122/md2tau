@@ -77,6 +77,6 @@ rm temp.xyz cnt.xyz C60.xyz
 
 # ---- make input scripts
 cd $WORKDIR/CAL${ical}
-sh ../UTIL/mkscripts.sh $ical
+sh ../$UDIR/mkscripts.sh $ical
 
 
