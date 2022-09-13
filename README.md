@@ -1,11 +1,11 @@
 # dump2sed
 
-This code calculates spectral energy density (SED) of carbon nanotubes (CNTs) with a dump file of LAMMPS.
+This code calculates a spectral energy density (SED) of carbon nanotubes (CNTs) from a dump file of LAMMPS.
 Because the code is written by C++, large systems can be analyzed.
 
 # sed2tau
 
-This code extracts linewidth of phonons from a SED.
+This code extracts linewidth of phonons from an SED.
 The extraction is not fully automated.
 
 ## Prerequisite for sed2tau
