@@ -3,7 +3,7 @@
 #--- For intel compiler
 CC=mpiicpc
 
-CFLAGS = -O3 -xHOST -std=c++11 \
+CFLAGS = -O3 -xHOST -qopenmp -std=c++11 \
 	 -L/opt/intel/compilers_and_libraries_2018.3.222/linux/mkl/lib/intel64 \
          -L/opt/intel/compilers_and_libraries_2018.3.222/linux/mpi/lib64 \
          -L/opt/intel/compilers_and_libraries/linux/lib/intel64 \
