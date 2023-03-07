@@ -109,7 +109,24 @@ namespace lmp{
         ifs >> istep1;
         return istep1 - istep0;
     }
-
+    
+    //--- get # of atoms from dump file
+    int get_natom_from_dump(char *filename){
+        int i, istep0, istep1, natom;
+        char word[128], line[1024];
+        ifstream ifs(filename);
+        if(ifs.fail()){
+            printf("Cannot find %s\n", filename);
+            exit(0);
+        }
+        //--- first block
+        ifs.getline(line, sizeof(line));
+        ifs >> istep0;
+        for(i=0;i<2;i++)
+            ifs.getline(line, sizeof(line));
+        ifs >> natom;
+        return natom;
+    }
 
 }
 #endif /* defined(____lmp_handling__) */

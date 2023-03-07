@@ -5,7 +5,7 @@
 #include <math.h>
 #include <iostream>
 #include "mpi.h"
-#include "myfftw3d.h"
+#include "myfftw.h"
 #include "file_handling.h"
 #include "lmp_handling.h"
 
@@ -212,7 +212,7 @@ int main(int argc, char **argv){
             //----- extract velocity and perform Fourier transform
             extract_isite_velo_for_fft3D(FDUMP, isite, SEDTYPE, ITYPE_CNT, 
                     Natom, Mcnt, Nrot, Nmd, Nsite, velo, radius);
-            MYFFTW::fftw3(Mcnt, Nrot, Nmd, velo, sed_raw);
+            MYFFTW::fftw3d(Mcnt, Nrot, Nmd, velo, sed_raw);
             for(i=0;i<Mcnt*Nrot*Nmd;i++) sed_raw[i] /= double(Mcnt * Nrot * Nmd);
             
             for(ik=0; ik<nk; ik++){

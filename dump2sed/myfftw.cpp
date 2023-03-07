@@ -1,7 +1,38 @@
-#include "myfftw3d.h"
+#include "myfftw.h"
 
 namespace MYFFTW{
-    void fftw3(int n1, int n2, int n3, double *in1, double *out1)
+    
+    void fftw1d(int n1, double *in1, double *out1){
+        
+        fftw_complex *in, *out;
+        fftw_plan plan;
+        int i, j, k, num;
+        
+        //---- prepare matrices
+        in = (fftw_complex*) fftw_malloc( sizeof(fftw_complex) *(n1));
+        out = (fftw_complex*) fftw_malloc( sizeof(fftw_complex) *(n1));
+        plan = fftw_plan_dft_1d(n1, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+        
+        //--- input data
+        for(i=0; i<n1; i++){
+            in[i][0] = in1[i];
+            in[i][1] = 0.;
+        }
+        
+        //----- 3D Fourier transform
+        fftw_execute(plan);
+        fftw_destroy_plan(plan);
+        
+        //---- output
+        for(i=0;i<n1; i++) out1[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
+        
+        //---- delete matrices
+        fftw_free(in);
+        fftw_free(out);
+    
+    }
+    
+    void fftw3d(int n1, int n2, int n3, double *in1, double *out1)
     {
         fftw_complex *in, *out;
         fftw_plan plan;
@@ -51,7 +82,7 @@ namespace MYFFTW{
         }
         
         //--- 3D Fourier transform
-        fftw3(n1, n2, n3, in, out);
+        fftw3d(n1, n2, n3, in, out);
         
         //----- Output results
         char ofile[] = "result3.txt";

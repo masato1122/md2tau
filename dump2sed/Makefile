@@ -24,20 +24,24 @@ IFFTW = -I/home/ohnishi/usr/local/include
 .cpp.o:
 	${CC} ${CFLAGS} ${LFLAGS} -c $<
 
-PROG = anphon
+cxxsrc1 = dump2sed.cpp myfftw.cpp file_handling.cpp 
+objs1=${cxxsrc1:.cpp=.o}
 
-cxxsrc = dump2sed.cpp myfftw3d.cpp file_handling.cpp 
-objs=${cxxsrc:.cpp=.o}
+cxxsrc2 = dump2dos.cpp myfftw.cpp file_handling.cpp 
+objs2=${cxxsrc2:.cpp=.o}
 
-default: dump2sed
+default: all
 
-all: ${PROG}
+all: dump2sed dump2dos
 
-dump2sed: ${objs}
-	${CC} ${CFLAGS} ${LFLAGS} -o $@ ${objs}
+dump2sed: ${objs1}
+	${CC} ${CFLAGS} ${LFLAGS} -o $@ ${objs1}
+
+dump2dos: ${objs2}
+	${CC} ${CFLAGS} ${LFLAGS} -o $@ ${objs2}
 
 clean:
-	rm -f ${objs}
+	rm -f ${objs1} ${objs2}
 
 .PHONY: clean
 
