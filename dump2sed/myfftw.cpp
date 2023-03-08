@@ -1,17 +1,17 @@
 #include "myfftw.h"
+#include <iostream>
 
 namespace MYFFTW{
     
     void fftw1d(int n1, double *in1, double *out1){
         
         fftw_complex *in, *out;
-        fftw_plan plan;
         int i, j, k, num;
         
         //---- prepare matrices
         in = (fftw_complex*) fftw_malloc( sizeof(fftw_complex) *(n1));
         out = (fftw_complex*) fftw_malloc( sizeof(fftw_complex) *(n1));
-        plan = fftw_plan_dft_1d(n1, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+        fftw_plan plan = fftw_plan_dft_1d(n1, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
         
         //--- input data
         for(i=0; i<n1; i++){
@@ -19,14 +19,15 @@ namespace MYFFTW{
             in[i][1] = 0.;
         }
         
-        //----- 3D Fourier transform
+        //----- 1D Fourier transform
         fftw_execute(plan);
-        fftw_destroy_plan(plan);
         
         //---- output
-        for(i=0;i<n1; i++) out1[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
+        for(i=0;i<n1; i++)
+            out1[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
         
         //---- delete matrices
+        fftw_destroy_plan(plan);
         fftw_free(in);
         fftw_free(out);
     

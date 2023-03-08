@@ -32,8 +32,10 @@ void extract_velocities_each_atom(
         int nmd, int natoms,
         int atom_index = 0, char* label2read = "vx", const int nskip=9);
 
+void print_array(int ndat, double* array);
+
 // --- output the result
-void write_dos(char* outfile, int nfreq, double* frequencies, double* dos);
+void write_dos(char* outfile, int nfreq, double* frequencies, double* dos, int natoms=0);
 
 int main(int argc, char **argv){
     
@@ -45,14 +47,14 @@ int main(int argc, char **argv){
     printf("---------------------------------\n");
     //}
     
-    //--- parameters
+    // --- parameters
     int i, j, ii, ia, idat, count;
     int Nuat, Nrot, i_coord_type;
     char IFILE[128], word[128];
     char FDUMP[128], CTYPE[128];
     char line[256];
-
-    //--- input file name
+    
+    // --- input file name
     if (argc > 1) sprintf(IFILE, "%s", argv[1]);
     else{
         sprintf(IFILE, "example_sed.in");
@@ -71,7 +73,6 @@ int main(int argc, char **argv){
     
     // --- read input file
     file::searchword(IFILE, "DUMP_FILE", FDUMP);
-    //file::searchword(IFILE, "INIT_COORD", FXYZ);
     file::searchword(IFILE, "TIMESTEP", line);
     double tstep = atof(line);
     int ITYPE_CNT = 1;
@@ -98,7 +99,12 @@ int main(int argc, char **argv){
     double* frequencies = new double[nfreq];
     for(i=0; i<nfreq; i++) 
         frequencies[i] = delta_w * i;
-     
+    
+    printf("\n");
+    printf(" Number of data  : %d\n", Nmd);
+    printf(" Number of atoms : %d\n", Natom);
+    printf("\n");
+    
     // --- prepare arrays
     double *velo_each = new double[Nmd];
     double *dos_each = new double[Nmd];
@@ -110,14 +116,18 @@ int main(int argc, char **argv){
     
     #pragma omp parallel for
     for(ia=0; ia<Natom; ia++){
+        
+        if(ia % 1000 == 0)
+            printf(" %d/%d \n", ia, Natom);
+
         for(j=0; j<3; j++){
             
             extract_velocities_each_atom(FDUMP, velo_each, Nmd, Natom, ia, labels[j]);
             
             MYFFTW::fftw1d(Nmd, velo_each, dos_each);
-            
+
             for(idat=0; idat<Nmd; idat++)
-                dos_total[idat] += velo_each[idat] / double(Natom * 3.);
+                dos_total[idat] += dos_each[idat] / double(Natom * 3.);
             
         }
     }
@@ -138,8 +148,7 @@ int main(int argc, char **argv){
     
     // --- output DOS
     char outfile_dos[100] = "dos.txt";
-    write_dos(outfile_dos, nfreq, frequencies, dos_ave);
-    
+    write_dos(outfile_dos, nfreq, frequencies, dos_ave, Natom);
     
     delete[] velo_each;
     delete[] dos_each;
@@ -246,10 +255,11 @@ void mkinput_dos(char *file){
     fclose(fp);
 }
 
-void write_dos(char* outfile, int nfreq, double* frequencies, double* dos){
+void write_dos(char* outfile, int nfreq, double* frequencies, double* dos, int natoms){
     
     FILE* fp = fopen(outfile, "w");
     
+    fprintf(fp, "# Number of atoms : %d\n", natoms);
     fprintf(fp, "# Frequency[THz]   DOS(a.u.)\n");
     
     for(int iw=0; iw<nfreq; iw++)
@@ -259,4 +269,9 @@ void write_dos(char* outfile, int nfreq, double* frequencies, double* dos){
     fclose(fp);
 }
 
+void print_array(int ndat, double* array){
+    for (int i=0; i<ndat; i++)
+        printf(" %02d : %8.3f \n", i, array[i]);
+    cout << endl;
+}
 
