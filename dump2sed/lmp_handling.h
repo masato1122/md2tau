@@ -128,6 +128,47 @@ namespace lmp{
         return natom;
     }
 
+    //-- read initial structure in dump file
+    int read_init_structure_dump(char *filename, double *cube, double **positions){
+        
+        int i, j;
+        int idx, type;
+        int timestep, natoms;
+        double vx, vy, vz;
+        char line[124];
+        
+        ifstream ifs(filename);
+        if(ifs.fail()){
+            printf("Cannot find %s\n", filename);
+            exit(0);
+        }
+        // ITEM: TIMESTEP
+        ifs.getline(line, sizeof(line));
+        ifs >> timestep;
+        
+        // ITEM: NUMBER OF ATOMS
+        ifs.getline(line, sizeof(line));
+        ifs.getline(line, sizeof(line));
+        ifs >> natoms;
+        
+        // ITEM: BOX BOUNDS pp pp pp
+        ifs.getline(line, sizeof(line));
+        ifs.getline(line, sizeof(line));
+        for(j=0; j<3; j++)
+            ifs >> cube[j*2] >> cube[j*2+1];
+        
+        // ITEM: ATOMS id type x y z vx vy vz
+        ifs.getline(line, sizeof(line));
+        ifs.getline(line, sizeof(line));
+        for(i=0; i<natoms; i++){
+            ifs >> idx >> type;
+            for(j=0; j<3; j++)
+                ifs >> positions[i][j];
+            ifs >> vx >> vy >> vz;
+        }
+
+    }
+
 }
 #endif /* defined(____lmp_handling__) */
 

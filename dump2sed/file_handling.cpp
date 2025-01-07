@@ -22,12 +22,16 @@ namespace file{
           temp = strtok(line, " "); sprintf(data0, temp);
           if(strcasecmp(data0, sword)==0){
             temp = strtok( NULL, " "); sprintf(data, temp);
-            check = 1; break;
+            check = 1; 
+            break;
           }
         }
       }
     }
-    if(check==0){ printf("cannot find %s in %s or no data\n", sword, file); exit(0);}
+    if(check==0){
+        printf("cannot find %s in %s or no data\n", sword, file); 
+        exit(0);
+    }
   }
   //
   int getNword(char line[]){

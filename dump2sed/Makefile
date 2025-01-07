@@ -30,9 +30,15 @@ objs1=${cxxsrc1:.cpp=.o}
 cxxsrc2 = dump2dos.cpp myfftw.cpp file_handling.cpp 
 objs2=${cxxsrc2:.cpp=.o}
 
+cxxsrc3 = dump2dos_div.cpp myfftw.cpp file_handling.cpp 
+objs3=${cxxsrc3:.cpp=.o}
+
+cxxsrc4 = dump2dos_div_each.cpp myfftw.cpp file_handling.cpp 
+objs4=${cxxsrc4:.cpp=.o}
+
 default: all
 
-all: dump2sed dump2dos
+all: dump2sed dump2dos dump2dos_div dump2dos_div_each
 
 dump2sed: ${objs1}
 	${CC} ${CFLAGS} ${LFLAGS} -o $@ ${objs1}
@@ -40,8 +46,14 @@ dump2sed: ${objs1}
 dump2dos: ${objs2}
 	${CC} ${CFLAGS} ${LFLAGS} -o $@ ${objs2}
 
+dump2dos_div: ${objs3}
+	${CC} ${CFLAGS} ${LFLAGS} -o $@ ${objs3}
+
+dump2dos_div_each: ${objs4}
+	${CC} ${CFLAGS} ${LFLAGS} -o $@ ${objs4}
+
 clean:
-	rm -f ${objs1} ${objs2}
+	rm -f ${objs1} ${objs2} ${objs3}
 
 .PHONY: clean
 
